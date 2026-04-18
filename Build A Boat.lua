@@ -21,7 +21,7 @@ local PAYLOAD_FLAG = "BABFT_PayloadFlag.json"
 
 -- Das komplette Script als Payload speichern
 local SELF_SCRIPT = [[
-loadstring(game:HttpGet('https://raw.githubusercontent.com/NightSyste/UI.lua/refs/heads/main/orion.lua'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/NightSyste/Build-A-Boat/refs/heads/main/Build%20A%20Boat.lua'))()
 ]] -- <-- Hier deine eigene Script-URL rein falls du eine hast
 
 local function savePayload()

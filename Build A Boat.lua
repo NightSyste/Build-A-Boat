@@ -16,17 +16,11 @@ local SettingsTab = Window:MakeTab({ Name = "Settings", Icon = "rbxassetid://603
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 
-local PAYLOAD_FILE = "BABFT_Payload.lua"
+local SCRIPT_URL = "https://raw.githubusercontent.com/NightSyste/Build-A-Boat/refs/heads/main/Build%20A%20Boat.lua"
 local PAYLOAD_FLAG = "BABFT_PayloadFlag.json"
-
--- Das komplette Script als Payload speichern
-local SELF_SCRIPT = [[
-loadstring(game:HttpGet('https://raw.githubusercontent.com/NightSyste/Build-A-Boat/refs/heads/main/Build%20A%20Boat.lua'))()
-]] -- <-- Hier deine eigene Script-URL rein falls du eine hast
 
 local function savePayload()
     pcall(function()
-        writefile(PAYLOAD_FILE, SELF_SCRIPT)
         writefile(PAYLOAD_FLAG, HttpService:JSONEncode({ execute = true }))
     end)
 end
@@ -43,24 +37,19 @@ local function checkAndRunPayload()
     end)
     if ok and flagData and flagData.execute == true then
         clearPayload()
-        local payloadOk, payloadContent = pcall(function()
-            return readfile(PAYLOAD_FILE)
-        end)
-        if payloadOk and payloadContent and payloadContent ~= "" then
-            spawn(function()
-                wait(3)
-                local runOk, err = pcall(function()
-                    loadstring(payloadContent)()
-                end)
-                if not runOk then
-                    warn("[Payload] Fehler beim Ausführen: " .. tostring(err))
-                end
+        spawn(function()
+            wait(3)
+            local runOk, err = pcall(function()
+                loadstring(game:HttpGet(SCRIPT_URL))()
             end)
-        end
+            if not runOk then
+                warn("[Payload] Fehler: " .. tostring(err))
+            end
+        end)
     end
 end
 
--- Beim Start direkt checken ob ein Payload wartet
+-- Beim Start checken ob Payload wartet
 checkAndRunPayload()
 
 -- ====================== AUTO FARM ======================
@@ -390,7 +379,7 @@ SettingsTab:AddButton({
     end
 })
 
-SettingsTab:AddParagraph("Auto Execute", "Payload wird nach jedem Server Hop & Rejoin automatisch ausgeführt.")
+SettingsTab:AddParagraph("Auto Execute", "Script startet nach jedem Server Hop & Rejoin automatisch.")
 
 -- ====================== INIT ======================
 OrionLib:Init()
